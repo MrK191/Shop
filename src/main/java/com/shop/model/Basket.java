@@ -1,6 +1,9 @@
 package com.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +11,9 @@ import java.util.List;
 @Entity
 @Table(name = "Basket")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Basket {
 
     @Id
@@ -18,7 +24,7 @@ public class Basket {
     private User user;
 
     @OneToMany
-    private List<Product> product;
+    private List<Book> books;
 
     @Column(name = "quanity")
     private int quanity;

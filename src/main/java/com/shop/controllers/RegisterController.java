@@ -3,7 +3,7 @@ package com.shop.controllers;
 
 import com.shop.exceptions.UsernameExistsException;
 import com.shop.model.User;
-import com.shop.service.UserServiceImpl;
+import com.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterController {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @PostMapping(value = "/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws UsernameExistsException {

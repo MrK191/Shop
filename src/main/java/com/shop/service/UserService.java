@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
-public class UserServiceImpl {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -29,6 +30,14 @@ public class UserServiceImpl {
 
         return userRepository.save(newUser);
 
+    }
+
+    public List<User> getAllUsers(){
+      return userRepository.getAllBy();
+    }
+
+    public User getUserWithId(Long id){
+       return userRepository.getOne(id);
     }
 
     private boolean usernameExist(String username) {

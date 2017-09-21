@@ -1,15 +1,21 @@
 package com.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
 @Entity
-@Table
+@Table(name = "Books")
 @Data
-public class Product {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,11 +25,15 @@ public class Product {
     private Basket basket;
 
     @NotEmpty
-    private String productName;
+    @Column(unique = true)
+    private String bookName;
 
     @NotEmpty
-    private String productPrice;
+    private String bookPrice;
 
     @Min(value = 0)
     private int unitInStock;
+
+    @NotEmpty
+    BookCategory bookCategory;
 }
