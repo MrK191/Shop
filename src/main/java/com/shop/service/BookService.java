@@ -1,5 +1,6 @@
 package com.shop.service;
 
+import com.shop.model.Basket;
 import com.shop.model.Book;
 import com.shop.repositories.BookRepository;
 import javassist.NotFoundException;
@@ -15,7 +16,7 @@ public class BookService {
     private BookRepository bookRepository;
 
     public List<Book>getAllBooks(){
-        return bookRepository.getAllBy();
+        return bookRepository.findAll();
     }
 
     public Book updateABook(Book book) throws NotFoundException {
@@ -35,6 +36,12 @@ public class BookService {
 
     public void deleteBookWithName(Book book){
         bookRepository.deleteByBookName(book.getBookName());
+    }
+
+    public List<Book> getBooksWithUserId(Long id, UserService userService) {
+        Basket basket = userService.getBasketWithUserId(id);
+
+        return basket.getBooks();
     }
 
     public Book getBookWithId(Long id){

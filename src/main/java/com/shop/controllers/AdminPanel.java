@@ -1,7 +1,11 @@
 package com.shop.controllers;
 
+import com.shop.exceptions.AddressNotFoundException;
+import com.shop.exceptions.BasketNotFoundException;
 import com.shop.exceptions.BookNotFoundException;
 import com.shop.exceptions.UserNotFoundException;
+import com.shop.model.Address;
+import com.shop.model.Basket;
 import com.shop.model.Book;
 import com.shop.model.User;
 import com.shop.service.BookService;
@@ -83,9 +87,42 @@ public class AdminPanel {
         return userService.getUserWithId(id);
     }
 
+    @GetMapping("/get-user-with-id/{id}/basket/")
+    Basket getUserBasket(@PathVariable("id") Long id) {
+        this.validateUser(id);
+        this.validateBasket(id);
+
+        return userService.getBasketWithUserId(id);
+    }
+
+    @GetMapping("/get-user-with-id/{id}/address/")
+    Address getUserAddress(@PathVariable("id") Long id) {
+        this.validateUser(id);
+        this.validateBasket(id); //TODO validate address
+
+        return userService.getAddressWithUserId(id);
+    }
+
+    @GetMapping("/get-user-with-id/{id}/books/")
+    List<Book> getUserListOfBooksInBasket(@PathVariable("id") Long id) {
+        this.validateUser(id);
+
+        return bookService.getBooksWithUserId(id, userService);
+    }
+
     private void validateUser(Long userId) {
         Optional.ofNullable(userService.getUserWithId(userId)).orElseThrow(
                 () -> new UserNotFoundException(userId));
+    }
+
+    private void validateBasket(Long userId) {
+        Optional.ofNullable(userService.getBasketWithUserId(userId)).orElseThrow(
+                () -> new BasketNotFoundException(userId));
+    }
+
+    private void validateAddress(Long userId) {
+        Optional.ofNullable(userService.getAddressWithUserId(userId)).orElseThrow(
+                () -> new AddressNotFoundException(userId));
     }
 
     private void validateBookWithBookName(String bookName) {
