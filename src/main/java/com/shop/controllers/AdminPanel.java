@@ -1,15 +1,12 @@
 package com.shop.controllers;
 
-import com.shop.exceptions.AddressNotFoundException;
-import com.shop.exceptions.BasketNotFoundException;
-import com.shop.exceptions.BookNotFoundException;
-import com.shop.exceptions.UserNotFoundException;
 import com.shop.model.Address;
 import com.shop.model.Basket;
 import com.shop.model.Book;
 import com.shop.model.User;
 import com.shop.service.BookService;
 import com.shop.service.UserService;
+import com.shop.validators.Validator;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin-panel")
@@ -29,37 +25,40 @@ public class AdminPanel {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Validator validator;
+
     @GetMapping("/get-all-books")
-    List<Book> getAllBooks(){
+    List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/book-id/{id}")
-    Book getABookWithId(@PathVariable("id") Long BookId){
-        this.validateBookWithBookId(BookId);
+    Book getABookWithId(@PathVariable("id") Long BookId) {
+        validator.validateBookWithBookId(BookId);
 
-      return bookService.getBookWithId(BookId);
+        return bookService.getBookWithId(BookId);
     }
 
     @GetMapping("/book-name/{BookName}")
-    Book getABookWithBookName(@PathVariable("BookName") String bookName){
-        this.validateBookWithBookName(bookName);
+    Book getABookWithBookName(@PathVariable("BookName") String bookName) {
+        validator.validateBookWithBookName(bookName);
 
         return bookService.getBookWithName(bookName);
     }
 
     @PutMapping("/edit-book/{book}")
     ResponseEntity<Book> editABook(@RequestBody Book book) throws NotFoundException {
-            this.validateBookWithBookName(book.getBookName());
+        validator.validateBookWithBookName(book.getBookName());
 
-            bookService.updateABook(book);
-            return new ResponseEntity<Book>(HttpStatus.CREATED);
+        bookService.updateABook(book);
+        return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
     @PostMapping("/create-book")
-    ResponseEntity<Book> createABook(@RequestBody Book book){
+    ResponseEntity<Book> createABook(@RequestBody Book book) {
 
-        if (bookService.isBookInDatabase(book)){
+        if (bookService.isBookInDatabase(book)) {
             return new ResponseEntity<Book>(HttpStatus.CONFLICT);
         }
         bookService.saveABook(book);
@@ -68,70 +67,46 @@ public class AdminPanel {
     }
 
     @PostMapping("/delete-book")
-    ResponseEntity<Book> deleteABookWithName(@RequestBody Book book){
-            this.validateBookWithBookName(book.getBookName());
+    ResponseEntity<Book> deleteABookWithName(@RequestBody Book book) {
+        validator.validateBookWithBookName(book.getBookName());
 
-            bookService.deleteBookWithName(book);
-            return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
+        bookService.deleteBookWithName(book);
+        return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-all-users")
-    List<User> getAllUsers(){
+    List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/get-user-with-id/{id}")
-    User getUserWithId(@PathVariable("id") Long id ){
-        this.validateUser(id);
+    User getUserWithId(@PathVariable("id") Long id) {
+        validator.validateUser(id);
 
         return userService.getUserWithId(id);
     }
 
     @GetMapping("/get-user-with-id/{id}/basket/")
     Basket getUserBasket(@PathVariable("id") Long id) {
-        this.validateUser(id);
-        this.validateBasket(id);
+        validator.validateUser(id);
+        validator.validateBasket(id);
 
         return userService.getBasketWithUserId(id);
     }
 
     @GetMapping("/get-user-with-id/{id}/address/")
     Address getUserAddress(@PathVariable("id") Long id) {
-        this.validateUser(id);
-        this.validateBasket(id); //TODO validate address
+        validator.validateUser(id);
+        validator.validateBasket(id); //TODO validate address
 
         return userService.getAddressWithUserId(id);
     }
 
     @GetMapping("/get-user-with-id/{id}/books/")
     List<Book> getUserListOfBooksInBasket(@PathVariable("id") Long id) {
-        this.validateUser(id);
+        validator.validateUser(id);
 
         return bookService.getBooksWithUserId(id, userService);
     }
 
-    private void validateUser(Long userId) {
-        Optional.ofNullable(userService.getUserWithId(userId)).orElseThrow(
-                () -> new UserNotFoundException(userId));
-    }
-
-    private void validateBasket(Long userId) {
-        Optional.ofNullable(userService.getBasketWithUserId(userId)).orElseThrow(
-                () -> new BasketNotFoundException(userId));
-    }
-
-    private void validateAddress(Long userId) {
-        Optional.ofNullable(userService.getAddressWithUserId(userId)).orElseThrow(
-                () -> new AddressNotFoundException(userId));
-    }
-
-    private void validateBookWithBookName(String bookName) {
-        Optional.ofNullable(bookService.getBookWithName(bookName)).orElseThrow(
-                () -> new BookNotFoundException(bookName));
-    }
-
-    private void validateBookWithBookId(Long id) {
-        Optional.ofNullable(bookService.getBookWithId(id)).orElseThrow(
-                () -> new BookNotFoundException(id));
-    }
 }
