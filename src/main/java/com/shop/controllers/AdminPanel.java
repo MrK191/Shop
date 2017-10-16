@@ -28,34 +28,28 @@ public class AdminPanel {
     @Autowired
     private Validator validator;
 
-    @GetMapping("/get-all-books")
+    @GetMapping("/books")
     List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
-    @GetMapping("/book-id/{id}")
+    @GetMapping("/books/{id}")
     Book getABookWithId(@PathVariable("id") Long BookId) {
         validator.validateBookWithBookId(BookId);
 
         return bookService.getBookWithId(BookId);
     }
 
-    @GetMapping("/book-name/{BookName}")
-    Book getABookWithBookName(@PathVariable("BookName") String bookName) {
-        validator.validateBookWithBookName(bookName);
-
-        return bookService.getBookWithName(bookName);
-    }
-
-    @PutMapping("/edit-book/{book}")
-    ResponseEntity<Book> editABook(@RequestBody Book book) throws NotFoundException {
-        validator.validateBookWithBookName(book.getBookName());
+    @PutMapping("/books/{id}/edit")
+    ResponseEntity<Book> editABook(@PathVariable("id") Long BookId,
+                                   @RequestBody Book book) throws NotFoundException {
+        validator.validateBookWithBookId(BookId);
 
         bookService.updateABook(book);
         return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/create-book")
+    @PostMapping("/books")
     ResponseEntity<Book> createABook(@RequestBody Book book) {
 
         if (bookService.isBookInDatabase(book)) {
@@ -66,15 +60,15 @@ public class AdminPanel {
         return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/delete-book")
-    ResponseEntity<Book> deleteABookWithName(@RequestBody Book book) {
-        validator.validateBookWithBookName(book.getBookName());
+    @DeleteMapping("/books/{id}")
+    ResponseEntity<Book> deleteABook(@PathVariable("id") Long BookId) {
+        validator.validateBookWithBookId(BookId);
 
-        bookService.deleteBookWithName(book);
+        bookService.deleteBookWithId(BookId);
         return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/get-all-users")
+    @GetMapping("/users")
     List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -86,15 +80,15 @@ public class AdminPanel {
         return userService.getUserWithId(id);
     }
 
-    @GetMapping("/get-user-with-id/{id}/basket/")
-    Basket getUserBasket(@PathVariable("id") Long id) {
-        validator.validateUser(id);
-        validator.validateBasket(id);
+    @GetMapping("/users/{id}/basket/")
+    Basket getUserBasket(@PathVariable("id") Long userId) {
+        validator.validateUser(userId);
+        validator.validateBasket(userId);
 
-        return userService.getBasketWithUserId(id);
+        return userService.getBasketWithUserId(userId);
     }
 
-    @GetMapping("/get-user-with-id/{id}/address/")
+    @GetMapping("/users/{id}/address/")
     Address getUserAddress(@PathVariable("id") Long id) {
         validator.validateUser(id);
         validator.validateBasket(id); //TODO validate address
@@ -102,7 +96,7 @@ public class AdminPanel {
         return userService.getAddressWithUserId(id);
     }
 
-    @GetMapping("/get-user-with-id/{id}/books/")
+    @GetMapping("/users/{id}/books/")
     List<Book> getUserListOfBooksInBasket(@PathVariable("id") Long id) {
         validator.validateUser(id);
 

@@ -1,8 +1,9 @@
 package com.shop.exceptions;
 
-/**
- * Created by Karol on 22.09.2017.
- */
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class BookNotFoundException extends RuntimeException {
 
     public BookNotFoundException(String bookName) {

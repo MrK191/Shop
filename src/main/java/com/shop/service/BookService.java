@@ -20,7 +20,7 @@ public class BookService {
     }
 
     public Book updateABook(Book book) throws NotFoundException {
-        Book bookFromDatabase = this.getBookWithName(book.getBookName());
+        Book bookFromDatabase = this.getBookWithId(book.getId());
 
             Book newBook = Book.builder().id(bookFromDatabase.getId()).bookName(book.getBookName()).bookCategory(book.getBookCategory())
                     .bookPrice(book.getBookPrice()).unitInStock(book.getUnitInStock()).build();
@@ -34,8 +34,8 @@ public class BookService {
         return book;
     }
 
-    public void deleteBookWithName(Book book){
-        bookRepository.deleteByBookName(book.getBookName());
+    public void deleteBookWithId(Long BookId) {
+        bookRepository.delete(BookId);
     }
 
     public List<Book> getBooksWithUserId(Long id, UserService userService) {

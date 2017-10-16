@@ -1,6 +1,8 @@
 package com.shop.controllers;
 
 import com.shop.service.BookService;
+import com.shop.service.UserService;
+import com.shop.validators.Validator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
-public class ShopApplicationTests {
+@WebMvcTest(RegisterController.class)
+public class RegisterControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,8 +30,14 @@ public class ShopApplicationTests {
 	@MockBean
     private RegisterController registerController;
 
+    @MockBean
+    private UserService userService;
+
 	@MockBean
     private BookService bookService;
+
+    @MockBean
+    private Validator validator;
 
 	@Before
     public void setup(){
@@ -41,9 +49,10 @@ public class ShopApplicationTests {
 	    mockMvc.perform(get("/register")).andExpect(status().isMethodNotAllowed());
 	}
 
-	@Test
-    public void contextLoads2() throws Exception {
-        mockMvc.perform(get("/test")).andExpect(status().isOk());
-    }
+	/*@Test
+    public void Test2() throws Exception {
+        mockMvc.perform(post("/register").content)
+                .andExpect(status().isForbidden());
+    }*/
 
 }

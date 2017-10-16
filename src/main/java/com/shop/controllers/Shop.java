@@ -2,7 +2,6 @@ package com.shop.controllers;
 
 import com.shop.model.Book;
 import com.shop.service.BookService;
-import com.shop.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +17,11 @@ public class Shop {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private Validator validator;
+    /*@Autowired
+    private Validator validator;*/
 
     @GetMapping
     List<Book> books() {
-
         return bookService.getAllBooks();
     }
 }

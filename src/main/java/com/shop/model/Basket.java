@@ -20,7 +20,7 @@ public class Basket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(mappedBy = "User")
+    @OneToOne
     private User user;
 
     @OneToMany
