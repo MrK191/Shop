@@ -7,6 +7,8 @@ import com.shop.model.Basket;
 import com.shop.model.User;
 import com.shop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,12 +36,18 @@ public class UserService {
 
     }
 
-    public List<User> getAllUsers(){
-      return userRepository.getAllBy();
+    public List<User> getAllUsers() {
+        return userRepository.getAllBy();
     }
 
-    public User getUserWithId(Long id){
-       return userRepository.getOne(id);
+    public User getUserWithId(Long id) {
+        return userRepository.getOne(id);
+    }
+
+    public User getCurrentLoggedInUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        return userRepository.findByUsername(auth.getName());
     }
 
     public Basket getBasketWithUserId(Long id) {

@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book,Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
-   public List<Book> getAllBy();
-   public Book getBookByBookName(String BookName);
-   public Book deleteByBookName (String BookName);
+    public List<Book> getAllBy();
 
-    public List<Book> getAllByBookCategory(BookCategory bookCategory);
+    public Book getBookByBookName(String BookName);
+
+    public Book deleteByBookName(String BookName);
+
+    public List<Book> findAllByBookCategory(BookCategory bookCategory);
+
+    public List<Book> getAllByBookNameContaining(String bookName);
 }

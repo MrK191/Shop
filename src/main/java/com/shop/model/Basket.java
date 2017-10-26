@@ -31,4 +31,8 @@ public class Basket {
 
     @Column(name = "totalPrice")
     private double totalPrice;
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
 }

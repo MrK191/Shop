@@ -33,39 +33,39 @@ public class AdminPanel {
         return bookService.getAllBooks();
     }
 
-    @GetMapping("/books/{id}")
-    Book getABookWithId(@PathVariable("id") Long BookId) {
-        validator.validateBookWithBookId(BookId);
-
-        return bookService.getBookWithId(BookId);
-    }
-
-    @PutMapping("/books/{id}/edit")
-    ResponseEntity<Book> editABook(@PathVariable("id") Long BookId,
-                                   @RequestBody Book book) throws NotFoundException {
-        validator.validateBookWithBookId(BookId);
-
-        bookService.updateABook(book);
-        return new ResponseEntity<Book>(HttpStatus.CREATED);
-    }
-
     @PostMapping("/books")
-    ResponseEntity<Book> createABook(@RequestBody Book book) {
+    ResponseEntity<Book> createBook(@RequestBody Book book) {
 
         if (bookService.isBookInDatabase(book)) {
             return new ResponseEntity<Book>(HttpStatus.CONFLICT);
         }
-        bookService.saveABook(book);
+        bookService.saveBook(book);
 
         return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/books/{id}")
-    ResponseEntity<Book> deleteABook(@PathVariable("id") Long BookId) {
-        validator.validateBookWithBookId(BookId);
+    @GetMapping("/books/{id}")
+    Book getBookWithId(@PathVariable("id") Long bookId) {
+        validator.validateBookWithBookId(bookId);
 
-        bookService.deleteBookWithId(BookId);
+        return bookService.getBookWithId(bookId);
+    }
+
+    @DeleteMapping("/books/{id}")
+    ResponseEntity<Book> deleteABook(@PathVariable("id") Long bookId) {
+        validator.validateBookWithBookId(bookId);
+
+        bookService.deleteBookWithId(bookId);
         return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
+    }
+
+    @PatchMapping("/books/{id}/edit")
+    ResponseEntity<Book> editABook(@PathVariable("id") Long bookId,
+                                   @RequestBody Book book) throws NotFoundException {
+        validator.validateBookWithBookId(bookId);
+
+        bookService.updateBook(book);
+        return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
@@ -73,7 +73,7 @@ public class AdminPanel {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/get-user-with-id/{id}")
+    @GetMapping("/users{id}")
     User getUserWithId(@PathVariable("id") Long id) {
         validator.validateUser(id);
 

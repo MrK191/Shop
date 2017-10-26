@@ -1,58 +1,42 @@
 package com.shop.controllers;
 
-import com.shop.service.BookService;
-import com.shop.service.UserService;
-import com.shop.validators.Validator;
-import org.junit.Before;
+import com.google.gson.Gson;
+import com.shop.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(RegisterController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class RegisterControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-	@MockBean
-    private RegisterController registerController;
-
-    @MockBean
-    private UserService userService;
-
-	@MockBean
-    private BookService bookService;
-
-    @MockBean
-    private Validator validator;
-
-	@Before
-    public void setup(){
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-    }
 
 	@Test
 	public void contextLoads() throws Exception {
 	    mockMvc.perform(get("/register")).andExpect(status().isMethodNotAllowed());
 	}
 
-	/*@Test
-    public void Test2() throws Exception {
-        mockMvc.perform(post("/register").content)
-                .andExpect(status().isForbidden());
-    }*/
+    @Test
+    public void registerBlankUser() throws Exception {
+        Gson gson = new Gson();
+        User blankUser = new User();
+        String json = gson.toJson(blankUser);
+
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andReturn().getResolvedException();
+    }
 
 }

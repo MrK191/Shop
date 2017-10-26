@@ -21,7 +21,7 @@ public class RegisterController {
     public ResponseEntity<User> registerUser(@RequestBody User user) throws UsernameExistsException {
         User newUser = userService.registerNewUserAccount(user);
 
-        if (newUser == null) {
+        if (newUser == null || newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()) {
             return new ResponseEntity<User>(HttpStatus.CONFLICT);
         }
 

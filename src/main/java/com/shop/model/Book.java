@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Books")
@@ -29,11 +30,13 @@ public class Book {
     private String bookName;
 
     @NotEmpty
-    private String bookPrice;
+    private double bookPrice;
 
     @Min(value = 0)
     private int unitInStock;
 
-    @NotEmpty
-    BookCategory bookCategory;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private BookCategory bookCategory;
+
 }

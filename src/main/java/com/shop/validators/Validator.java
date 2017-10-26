@@ -50,4 +50,9 @@ public class Validator {
                 () -> new BookNotFoundException(userId)); //TODO Address service
     }
 
+    /*public void validateBooksWithBookCategory(BookCategory bookCategory) {
+        Optional.ofNullable(bookService.getBooksWithBookCategory(bookCategory)).orElseThrow(
+                () -> new BooksInBookCategoryNotFoundException(bookCategory)); //TODO Address service
+    }*/
+
 }
