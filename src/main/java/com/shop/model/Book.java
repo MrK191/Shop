@@ -22,9 +22,6 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    private Basket basket;
-
     @NotEmpty
     @Column(unique = true)
     private String bookName;

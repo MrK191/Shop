@@ -17,26 +17,31 @@ import javax.validation.constraints.Size;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")
-    @Size(min=5, max=50)
+    @Size(min = 5, max = 50)
     private String username;
 
     @Column(name = "password")
-    @Size(min=6, max=50)
+    @Size(min = 6, max = 50)
     private String password;
 
     @Column(name = "role")
     private String role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     @Builder.Default
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @Builder.Default
     private Basket basket;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @Builder.Default
+    private CreditCard creditCard;
+
 
 }

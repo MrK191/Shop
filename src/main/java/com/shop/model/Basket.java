@@ -17,10 +17,12 @@ import java.util.List;
 public class Basket {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
 
     @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
     private User user;
 
     @OneToMany

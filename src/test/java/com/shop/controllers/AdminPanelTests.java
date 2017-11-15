@@ -37,7 +37,7 @@ public class AdminPanelTests {
     @Before
     public void setup() {
 
-        book = Book.builder().bookName("Tower421").bookPrice("1000").bookCategory(BookCategory.SCIENCEFICTION).build();
+        book = Book.builder().bookName("Tower421").bookPrice(1000).bookCategory(BookCategory.SCIENCEFICTION).build();
 
     }
 

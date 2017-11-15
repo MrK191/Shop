@@ -21,13 +21,9 @@ public class BookService {
     }
 
     public Book updateBook(Book book) throws NotFoundException {
-        Book bookFromDatabase = this.getBookWithId(book.getId());
 
-        Book newBook = Book.builder().id(bookFromDatabase.getId()).bookName(book.getBookName()).bookCategory(book.getBookCategory())
-                .bookPrice(book.getBookPrice()).unitInStock(book.getUnitInStock()).build();
-        bookRepository.save(newBook);
+        bookRepository.save(book);
         return book;
-
     }
 
     public Book saveBook(Book book) {

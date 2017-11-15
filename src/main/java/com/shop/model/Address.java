@@ -9,12 +9,14 @@ import javax.persistence.*;
 @Data
 public class Address {
 
-    @OneToOne
-    private User user;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    private User user;
 
     @Column(name = "city")
     private String city;
