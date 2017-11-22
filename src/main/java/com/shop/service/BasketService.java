@@ -4,13 +4,20 @@ import com.shop.exceptions.BookOutOfStockException;
 import com.shop.model.Basket;
 import com.shop.model.Book;
 import com.shop.model.User;
+import com.shop.repositories.BasketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@Transactional
 public class BasketService {
+
+    @Autowired
+    private BasketRepository basketRepository;
 
     @Autowired
     private UserService userService;
@@ -40,8 +47,11 @@ public class BasketService {
             bookService.decreaseBookStock(bookToAdd);
         } else {
 
-            Basket userBasket = this.getCurrentUserBasket(currentUser);
-            userBasket.addBook(bookToAdd);
+            Basket userBasket = this.getCurrentUserBasket(currentUser.getId());
+            List<Book> books = userBasket.getBooks();
+            books.add(bookToAdd);
+
+            userBasket.setBooks(books);
             userBasket.setQuanity(userBasket.getQuanity() + 1);
             userBasket.setTotalPrice(userBasket.getTotalPrice() + bookToAdd.getBookPrice());
 
@@ -51,7 +61,7 @@ public class BasketService {
 
     }
 
-    public Basket getCurrentUserBasket(User user) {
-        return user.getBasket();
+    public Basket getCurrentUserBasket(Long userId) {
+        return basketRepository.getById(userId);
     }
 }

@@ -59,7 +59,7 @@ public class AdminPanel {
         return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
     }
 
-    @PatchMapping("/books/{id}/edit")
+    @PutMapping("/books/{id}/edit")
     ResponseEntity<Book> editABook(@PathVariable("id") Long bookId,
                                    @RequestBody Book book) throws NotFoundException {
         validator.validateBookWithBookId(bookId);

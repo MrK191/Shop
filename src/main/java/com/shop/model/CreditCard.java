@@ -17,12 +17,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreditCard {
 
-    @OneToOne
-    private User user;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    private User user;
 
     @NotNull
     @Enumerated(EnumType.STRING)
