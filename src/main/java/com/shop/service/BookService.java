@@ -16,6 +16,12 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BasketService basketService;
+
+    @Autowired
+    private UserService userService;
+
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
@@ -31,17 +37,24 @@ public class BookService {
         return book;
     }
 
-    public void decreaseBookStock(Book book) {
+    public void increaseBookStockBy(Book book, int increaseBy) {
+        book.setUnitInStock(book.getUnitInStock() + increaseBy);
 
-        book.setUnitInStock(book.getUnitInStock() - 1);
+        bookRepository.save(book);
+    }
+
+    public void decreaseBookStockBy(Book book, int decreaseBy) {
+        book.setUnitInStock(book.getUnitInStock() - decreaseBy);
+
+        bookRepository.save(book);
     }
 
     public void deleteBookWithId(Long BookId) {
         bookRepository.delete(BookId);
     }
 
-    public List<Book> getBooksWithUserId(Long id, UserService userService) {
-        Basket basket = userService.getBasketWithUserId(id);
+    public List<Book> getBooksWithUserId(Long userId) {
+        Basket basket = basketService.getCurrentUserBasket(userId);
 
         return basket.getBooks();
     }

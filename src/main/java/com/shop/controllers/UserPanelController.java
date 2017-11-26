@@ -4,6 +4,8 @@ import com.shop.model.Address;
 import com.shop.service.AddressService;
 import com.shop.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,16 +20,18 @@ public class UserPanelController {
     private Validator validator;
 
     @PostMapping("/address")
-    public void saveAddress(@RequestBody Address address) {
+    public ResponseEntity saveAddress(@RequestBody Address address) {
         validator.validateAddress(address.getId());
 
         addressService.saveUserAddress(address);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PutMapping("/address")
-    public void updateAddress(@RequestBody Address address) {
+    public ResponseEntity updateAddress(@RequestBody Address address) {
 
         addressService.saveUserAddress(address);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/address")

@@ -28,12 +28,16 @@ public class AddressService {
         addressRepository.save(address);
     }
 
-
     public void deleteCurrentAddress() {
         User currentUser = getCurrentUser();
         currentUser.setAddress(null);
 
         userRepository.save(currentUser);
+    }
+
+    public Address getUserAddress(Long id) {
+
+        return addressRepository.findOne(id);
     }
 
     private User getCurrentUser() {

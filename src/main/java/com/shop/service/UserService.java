@@ -2,8 +2,6 @@ package com.shop.service;
 
 
 import com.shop.exceptions.UsernameExistsException;
-import com.shop.model.Address;
-import com.shop.model.Basket;
 import com.shop.model.User;
 import com.shop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,18 +46,6 @@ public class UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return userRepository.findByUsername(auth.getName());
-    }
-
-    public Basket getBasketWithUserId(Long id) {
-        User user = userRepository.getOne(id);
-
-        return user.getBasket();
-    }
-
-    public Address getAddressWithUserId(Long id) {
-        User user = userRepository.getOne(id);
-
-        return user.getAddress();
     }
 
     private boolean usernameExist(String username) {

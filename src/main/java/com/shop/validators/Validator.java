@@ -4,6 +4,8 @@ import com.shop.exceptions.AddressNotFoundException;
 import com.shop.exceptions.BasketNotFoundException;
 import com.shop.exceptions.BookNotFoundException;
 import com.shop.exceptions.UserNotFoundException;
+import com.shop.service.AddressService;
+import com.shop.service.BasketService;
 import com.shop.service.BookService;
 import com.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,24 @@ public class Validator {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private AddressService addressService;
+
+    @Autowired
+    private BasketService basketService;
+
     public void validateUser(Long userId) {
         Optional.ofNullable(userService.getUserWithId(userId)).orElseThrow(
                 () -> new UserNotFoundException(userId));
     }
 
     public void validateBasket(Long userId) {
-        Optional.ofNullable(userService.getBasketWithUserId(userId)).orElseThrow(
+        Optional.ofNullable(basketService.getCurrentUserBasket(userId)).orElseThrow(
                 () -> new BasketNotFoundException(userId));
     }
 
     public void validateAddress(Long userId) {
-        Optional.ofNullable(userService.getAddressWithUserId(userId)).orElseThrow(
+        Optional.ofNullable(addressService.getUserAddress(userId)).orElseThrow(
                 () -> new AddressNotFoundException(userId));
     }
 
@@ -45,14 +53,9 @@ public class Validator {
                 () -> new BookNotFoundException(id));
     }
 
-    public void validateAddressWithUserId(Long userId) {
-        Optional.ofNullable(bookService.getBookWithId(userId)).orElseThrow(
-                () -> new BookNotFoundException(userId)); //TODO Address service
-    }
-
     /*public void validateBooksWithBookCategory(BookCategory bookCategory) {
         Optional.ofNullable(bookService.getBooksWithBookCategory(bookCategory)).orElseThrow(
-                () -> new BooksInBookCategoryNotFoundException(bookCategory)); //TODO Address service
+                () -> new BooksInBookCategoryNotFoundException(bookCategory));
     }*/
 
 }

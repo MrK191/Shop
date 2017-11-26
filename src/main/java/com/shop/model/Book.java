@@ -26,7 +26,7 @@ public class Book {
     @Column(unique = true)
     private String bookName;
 
-    @NotEmpty
+    @Min(0)
     private double bookPrice;
 
     @Min(value = 0)

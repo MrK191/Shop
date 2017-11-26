@@ -4,6 +4,8 @@ import com.shop.model.Address;
 import com.shop.model.Basket;
 import com.shop.model.Book;
 import com.shop.model.User;
+import com.shop.service.AddressService;
+import com.shop.service.BasketService;
 import com.shop.service.BookService;
 import com.shop.service.UserService;
 import com.shop.validators.Validator;
@@ -17,13 +19,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin-panel")
-public class AdminPanel {
+public class AdminPanelController {
 
     @Autowired
     private BookService bookService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BasketService basketService;
+
+    @Autowired
+    private AddressService addressService;
 
     @Autowired
     private Validator validator;
@@ -44,6 +52,14 @@ public class AdminPanel {
         return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
+    @PutMapping("/books")
+    ResponseEntity<Book> editABook(@RequestBody Book book) throws NotFoundException {
+        validator.validateBookWithBookId(book.getId());
+
+        bookService.updateBook(book);
+        return new ResponseEntity<Book>(HttpStatus.CREATED);
+    }
+
     @GetMapping("/books/{id}")
     Book getBookWithId(@PathVariable("id") Long bookId) {
         validator.validateBookWithBookId(bookId);
@@ -57,15 +73,6 @@ public class AdminPanel {
 
         bookService.deleteBookWithId(bookId);
         return new ResponseEntity<Book>(HttpStatus.ACCEPTED);
-    }
-
-    @PutMapping("/books/{id}/edit")
-    ResponseEntity<Book> editABook(@PathVariable("id") Long bookId,
-                                   @RequestBody Book book) throws NotFoundException {
-        validator.validateBookWithBookId(bookId);
-
-        bookService.updateBook(book);
-        return new ResponseEntity<Book>(HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
@@ -85,22 +92,21 @@ public class AdminPanel {
         validator.validateUser(userId);
         validator.validateBasket(userId);
 
-        return userService.getBasketWithUserId(userId);
+        return basketService.getCurrentUserBasket(userId);
     }
 
     @GetMapping("/users/{id}/address/")
     Address getUserAddress(@PathVariable("id") Long id) {
-        validator.validateUser(id);
-        validator.validateBasket(id); //TODO validate address
+        validator.validateAddress(id);
 
-        return userService.getAddressWithUserId(id);
+        return addressService.getUserAddress(id);
     }
 
     @GetMapping("/users/{id}/books/")
     List<Book> getUserListOfBooksInBasket(@PathVariable("id") Long id) {
         validator.validateUser(id);
 
-        return bookService.getBooksWithUserId(id, userService);
+        return bookService.getBooksWithUserId(id);
     }
 
 }
