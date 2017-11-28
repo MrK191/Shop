@@ -10,11 +10,10 @@ import javax.persistence.*;
 public class Address {
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "addressId")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "id")
     @MapsId
     private User user;
 

@@ -26,6 +26,7 @@ public class AddressService {
         address.setUser(currentUser);
 
         addressRepository.save(address);
+        userRepository.save(currentUser);
     }
 
     public void deleteCurrentAddress() {

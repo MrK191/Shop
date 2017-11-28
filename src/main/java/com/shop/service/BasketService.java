@@ -36,40 +36,24 @@ public class BasketService {
             throw new BookOutOfStockException(bookToAdd.getBookName() + " is out of stock.");
         }
         if (currentUser.getBasket() == null) {
-            System.out.println("TUUUUU");
-            ArrayList<Book> bookList = new ArrayList<>();
-            bookList.add(bookToAdd);
-
-            Basket basket =
-                Basket.builder()
-                    .books(bookList)
-                    .quanity(1)
-                    .totalPrice(bookToAdd.getBookPrice())
-                    .user(currentUser)
-                    .build();
+            this.createNewBasket(bookToAdd, currentUser);
 
             bookService.decreaseBookStockBy(bookToAdd, 1);
-
-            basketRepository.save(basket);
         } else {
             Basket userBasket = this.getCurrentUserBasket(currentUser.getId());
 
             if (bookInBasket) {
+
                 if (bookQuanity > bookToAdd.getUnitInStock()) {
                     throw new BookOutOfStockException("Order quanity: " + bookQuanity +
                         " is bigger than books in stock: " + bookToAdd.getUnitInStock());
                 }
+
                 bookService.decreaseBookStockBy(bookToAdd, bookQuanity);
                 userBasket.setQuanity(userBasket.getQuanity() + bookQuanity);
                 userBasket.setTotalPrice(userBasket.getTotalPrice() + bookToAdd.getBookPrice() * bookQuanity);
             } else {
-
-                List<Book> books = userBasket.getBooks();
-                books.add(bookToAdd);
-
-                userBasket.setBooks(books);
-                userBasket.setQuanity(userBasket.getQuanity() + 1);
-                userBasket.setTotalPrice(userBasket.getTotalPrice() + bookToAdd.getBookPrice());
+                this.addBookToBasket(bookToAdd, userBasket);
 
                 bookService.decreaseBookStockBy(bookToAdd, 1);
             }
@@ -79,6 +63,30 @@ public class BasketService {
 
     public Basket getCurrentUserBasket(Long userId) {
         return basketRepository.getById(userId);
+    }
+
+    private void createNewBasket(Book book, User user) {
+        ArrayList<Book> bookList = new ArrayList<>();
+        bookList.add(book);
+
+        Basket basket =
+            Basket.builder()
+                .books(bookList)
+                .quanity(1)
+                .totalPrice(book.getBookPrice())
+                .user(user)
+                .build();
+    }
+
+    private void addBookToBasket(Book bookToAdd, Basket basket) {
+
+        List<Book> books = basket.getBooks();
+        books.add(bookToAdd);
+
+        basket.setBooks(books);
+        basket.setQuanity(basket.getQuanity() + 1);
+        basket.setTotalPrice(basket.getTotalPrice() + bookToAdd.getBookPrice());
+
     }
 
     private boolean bookAlreadyInBasket(User user, Book bookToAdd) {

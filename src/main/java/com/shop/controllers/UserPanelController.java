@@ -21,7 +21,7 @@ public class UserPanelController {
 
     @PostMapping("/address")
     public ResponseEntity saveAddress(@RequestBody Address address) {
-        validator.validateAddress(address.getId());
+
 
         addressService.saveUserAddress(address);
         return new ResponseEntity(HttpStatus.CREATED);
