@@ -54,7 +54,7 @@ public class BookService {
     }
 
     public List<Book> getBooksWithUserId(Long userId) {
-        Basket basket = basketService.getCurrentUserBasket(userId);
+        Basket basket = basketService.getCurrentBasket(userId);
 
         return basket.getBooks();
     }

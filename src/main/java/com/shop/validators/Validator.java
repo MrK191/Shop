@@ -34,7 +34,7 @@ public class Validator {
     }
 
     public void validateBasket(Long userId) {
-        Optional.ofNullable(basketService.getCurrentUserBasket(userId)).orElseThrow(
+        Optional.ofNullable(basketService.getCurrentBasket(userId)).orElseThrow(
                 () -> new BasketNotFoundException(userId));
     }
 

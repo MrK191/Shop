@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
@@ -32,6 +33,10 @@ public class UserService {
 
         return userRepository.save(newUser);
 
+    }
+
+    public void modifyAndSaveUser(User user) {
+        userRepository.save(user);
     }
 
     public List<User> getAllUsers() {

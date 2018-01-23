@@ -26,24 +26,21 @@ public class BasketService {
     private BookService bookService;
 
     public void addBookToBasketWithBookId(Long bookId, int bookQuanity) {
-
         User currentUser = userService.getCurrentLoggedInUser();
         Book bookToAdd = bookService.getBookWithId(bookId);
-        boolean bookInBasket = this.bookAlreadyInBasket(currentUser, bookToAdd);
 
         if (bookToAdd.getUnitInStock() <= 0) {
-
             throw new BookOutOfStockException(bookToAdd.getBookName() + " is out of stock.");
         }
-        if (currentUser.getBasket() == null) {
+
+        if (this.getCurrentBasket(currentUser.getId()) == null) { 
             this.createNewBasket(bookToAdd, currentUser);
-
             bookService.decreaseBookStockBy(bookToAdd, 1);
+
         } else {
-            Basket userBasket = this.getCurrentUserBasket(currentUser.getId());
+            Basket userBasket = this.getCurrentBasket(currentUser.getId());
 
-            if (bookInBasket) {
-
+            if (this.bookAlreadyInBasket(currentUser, bookToAdd)) {
                 if (bookQuanity > bookToAdd.getUnitInStock()) {
                     throw new BookOutOfStockException("Order quanity: " + bookQuanity +
                         " is bigger than books in stock: " + bookToAdd.getUnitInStock());
@@ -54,15 +51,29 @@ public class BasketService {
                 userBasket.setTotalPrice(userBasket.getTotalPrice() + bookToAdd.getBookPrice() * bookQuanity);
             } else {
                 this.addBookToBasket(bookToAdd, userBasket);
-
                 bookService.decreaseBookStockBy(bookToAdd, 1);
             }
             basketRepository.save(userBasket);
         }
     }
 
-    public Basket getCurrentUserBasket(Long userId) {
-        return basketRepository.getById(userId);
+    public Basket getUserBaskets(Long userId) {
+        return basketRepository.findOne(userId);
+    }
+
+    public void deleteUserBasket(Long userId) {
+        basketRepository.delete(userId);
+    }
+
+    public Basket getCurrentBasket(Long userId) {
+        return basketRepository.findByCurrentBasket(userId);
+    }
+
+    public void deactivateCurrentBasket(Long userId) {
+        Basket basket = this.getCurrentBasket(userId);
+        basket.setCurrentBasket(false);
+
+        basketRepository.save(basket);
     }
 
     private void createNewBasket(Book book, User user) {
@@ -75,7 +86,10 @@ public class BasketService {
                 .quanity(1)
                 .totalPrice(book.getBookPrice())
                 .user(user)
+                .currentBasket(true)
                 .build();
+
+        basketRepository.save(basket);
     }
 
     private void addBookToBasket(Book bookToAdd, Basket basket) {
@@ -90,7 +104,7 @@ public class BasketService {
     }
 
     private boolean bookAlreadyInBasket(User user, Book bookToAdd) {
-        Basket userBasket = user.getBasket();
+        Basket userBasket = getCurrentBasket(user.getId());
         List<Book> bookList = userBasket.getBooks();
 
         return bookList.stream().anyMatch(book -> bookToAdd.equals(book));

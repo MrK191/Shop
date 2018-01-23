@@ -87,22 +87,22 @@ public class AdminPanelController {
         return userService.getUserWithId(id);
     }
 
-    @GetMapping("/users/{id}/basket/")
-    Basket getUserBasket(@PathVariable("id") Long userId) {
+    @GetMapping("/users/{id}/basket")
+    Basket getCurrentUserBasket(@PathVariable("id") Long userId) {
         validator.validateUser(userId);
         validator.validateBasket(userId);
 
-        return basketService.getCurrentUserBasket(userId);
+        return basketService.getCurrentBasket(userId);
     }
 
-    @GetMapping("/users/{id}/address/")
+    @GetMapping("/users/{id}/address")
     Address getUserAddress(@PathVariable("id") Long id) {
         validator.validateAddress(id);
 
         return addressService.getUserAddress(id);
     }
 
-    @GetMapping("/users/{id}/books/")
+    @GetMapping("/users/{id}/books")
     List<Book> getUserListOfBooksInBasket(@PathVariable("id") Long id) {
         validator.validateUser(id);
 

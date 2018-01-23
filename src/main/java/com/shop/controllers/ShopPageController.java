@@ -45,7 +45,8 @@ public class ShopPageController {
     }
 
     @PostMapping("/add-book/{bookId}")
-    private ResponseEntity<Book> addBookToBasket(@PathVariable Long bookId, @RequestParam("quanity") int bookQuanity) {
+    private ResponseEntity<Book> addBookToBasket(@PathVariable Long bookId,
+                                                 @RequestParam("quanity") int bookQuanity) {
 
         basketService.addBookToBasketWithBookId(bookId, bookQuanity);
 

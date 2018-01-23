@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     public void removeByUsername(String username);
 
-    @Query(value = "SELECT ad.user FROM Address ad")
+    @Query(value = "SELECT ad.user FROM Address ad") //maybe native query
     public List<User> getAllUsers();
 
 }

@@ -30,6 +30,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and().authorizeRequests()
                 .antMatchers("/register").permitAll()
+            .antMatchers("/payment/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/shop/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin-panel/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
